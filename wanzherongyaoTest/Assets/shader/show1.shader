@@ -110,7 +110,7 @@
 		
 		fixed4 frag( v2f i ) : COLOR
 		{
-		      fixed4 tmpvar_1;
+		      fixed4 finalColor;
 			  half gloss_2;
 			  half3 noise_3;
 			  half3 albedo_4;
@@ -175,12 +175,12 @@
 			  half4 tmpvar_28;
 			  tmpvar_28.xyz = tmpvar_26;
 			  tmpvar_28.w = tmpvar_7.w;
-			  tmpvar_1 = tmpvar_28;
+			  finalColor = tmpvar_28;
 
 			  //return fixed4(clamp ((fixed((i.uv4.y - _Offset)) + fixed((normalize(i.uv5).y * 0.5))), 0.0, 1.0), 0, 0, 1);
-			  //tmpvar_1.xyz = lerp (_HeightColor.xyz, fixed3(1.0, 1.0, 1.0), clamp ((fixed((i.uv4.y - (mul(_Object2World, fixed4(0.0, 0.0, 0.0, 1.0)).y - _Offset))) + fixed((normalize(i.uv5).y * 0.5))), 0.0, 1.0));
+			  //finalColor.xyz = lerp (_HeightColor.xyz, fixed3(1.0, 1.0, 1.0), clamp ((fixed((i.uv4.y - (mul(_Object2World, fixed4(0.0, 0.0, 0.0, 1.0)).y - _Offset))) + fixed((normalize(i.uv5).y * 0.5))), 0.0, 1.0));
 
-			  return tmpvar_1;
+			  return finalColor;
 		}
 	
 	ENDCG
