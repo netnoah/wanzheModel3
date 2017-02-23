@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\script\AutoRotate.cs" />
+     <Compile Include="Assets\script\UIEventListener.cs" />
      <None Include="Assets\shader\show1.shader" />
      <None Include="Assets\shader\showWithNormal - 副本.shader" />
      <None Include="Assets\shader\show1 - 副本.shader" />
