@@ -111,75 +111,38 @@
 		fixed4 frag( v2f i ) : COLOR
 		{
 		      fixed4 finalColor;
-			  half gloss_2;
-			  half3 noise_3;
-			  half3 albedo_4;
-			  half2 tmpvar_5;
-			  half3 cse_6;
-			  cse_6 = normalize(i.uv1);
-			  tmpvar_5 = ((cse_6.xy * 0.5) + 0.5);
-			  fixed4 tmpvar_7;
-			  tmpvar_7 = tex2D (_MainTex, i.uv0.xy);
-			  fixed4 tmpvar_8;
-			  tmpvar_8 = tex2D (_MaskTex, i.uv0.xy);
-			  fixed3 tmpvar_9;
-			  tmpvar_9 = ((tmpvar_7.xyz + 0.15) * (tex2D (_LightTex, tmpvar_5) * 1.2).xyz);
-			  albedo_4 = tmpvar_9;
-			  fixed3 tmpvar_10;
-			  tmpvar_10 = tex2D (_NoiseTex, i.uv0.zw).xyz;
-			  noise_3 = tmpvar_10;
-			  half3 tmpvar_11;
-			  tmpvar_11 = ((noise_3 * (tmpvar_7.xyz * _NoiseColor)) * (tmpvar_8.y * _MMultiplier));
-			  noise_3 = tmpvar_11;
-			  half3 tmpvar_12;
-			  tmpvar_12 = ((albedo_4 + tmpvar_7.xyz) + tmpvar_11);
-			  half2 tmpvar_13;
-			  tmpvar_13 = ((cse_6.xy * 0.5) + 0.5);
-			  fixed4 tmpvar_14;
-			  tmpvar_14 = tex2D (_ReflectTex, tmpvar_13);
-			  half3 tmpvar_15;
-			  tmpvar_15 = lerp (tmpvar_12, ((tmpvar_12 * 
-				pow ((tmpvar_14.xyz * _ReflectColor), _ReflectPower)) * _ReflectionMultiplier), tmpvar_8.zzz);
-			  albedo_4 = tmpvar_15;
-			  fixed tmpvar_16;
-			  tmpvar_16 = tmpvar_8.x;
-			  gloss_2 = tmpvar_16;
-			  half3 color_17;
-			  half3 ramp_18;
-			  float nh_19;
-			  fixed diff_20;
-			  half tmpvar_21;
-			  tmpvar_21 = ((i.uv3.z * 0.5) + 0.5);
-			  diff_20 = tmpvar_21;
-			  half tmpvar_22;
-			  tmpvar_22 = max (0.0, normalize((i.uv3 + i.uv2)).z);
-			  nh_19 = tmpvar_22;
-			  fixed2 tmpvar_23;
-			  tmpvar_23.y = 0.5;
-			  tmpvar_23.x = diff_20;
-			  fixed tmpvar_24;
-			  tmpvar_24 = tex2D (_RampMap, tmpvar_23).xyz;
-			  ramp_18 = tmpvar_24;
-			  float3 tmpvar_25;
-			  tmpvar_25 = ((_SpecColor * (
-				((pow (nh_19, _SpecPower) * gloss_2) * _SpecMultiplier)
-			   * 2.0)) + ((ramp_18 + fixed3(0.5, 0.5, 0.5)) * tmpvar_15));
-			  color_17 = tmpvar_25;
-			  half3 tmpvar_26;
-			  float3 tmpvar_27;
-			  tmpvar_27 = clamp (((color_17 * 
-				lerp (_HeightColor.xyz, fixed3(1.0, 1.0, 1.0), 
-				clamp ((fixed((i.uv4.y - (mul(_Object2World, fixed4(0.0, 0.0, 0.0, 1.0)).y - _Offset))) + fixed((normalize(i.uv5).y * 0.5))), 0.0, 1.0))
-				) * _HeightLightCompensation), 0.0, 1.0);
-			  tmpvar_26 = tmpvar_27;
-			  half4 tmpvar_28;
-			  tmpvar_28.xyz = tmpvar_26;
-			  tmpvar_28.w = tmpvar_7.w;
-			  finalColor = tmpvar_28;
+			  half gloss;
+			  half2 fixed_n;
+			  half3 normalize_n;
+			  normalize_n = normalize(i.uv1);
+			  fixed_n = ((normalize_n.xy * 0.5) + 0.5);
+
+			  fixed4 main_color = tex2D (_MainTex, i.uv0.xy);
+			  fixed4 mask_color = tex2D (_MaskTex, i.uv0.xy);
+			  half3 resultColor_1 = ((main_color.xyz + 0.15) * (tex2D (_LightTex, fixed_n) * 1.2).xyz);
+			  half3 noise_color = tex2D (_NoiseTex, i.uv0.zw).xyz;
+			  half3 noise_color2 = ((noise_color * (main_color.xyz * _NoiseColor)) * (mask_color.y * _MMultiplier));
+			  half3 resultColor_2 = ((resultColor_1 + main_color.xyz) + noise_color2);
+			  fixed4 reflect_color = tex2D (_ReflectTex, fixed_n);
+			  half3 resultColor_3 = lerp (resultColor_2, 
+										((resultColor_2 * pow ((reflect_color.xyz * _ReflectColor), _ReflectPower)) * _ReflectionMultiplier),
+										mask_color.zzz);
+			  fixed2 ramp_uv;
+			  ramp_uv.x = ((i.uv3.z * 0.5) + 0.5);
+			  ramp_uv.y = 0.5;
+			  half3 ramp_color = tex2D (_RampMap, ramp_uv).xyz;
+			  float halfway_dir = max (0.0, normalize((i.uv3 + i.uv2)).z);  
+			  gloss = mask_color.x;
+			  float3 resultColor_4 = ((_SpecColor * (((pow (halfway_dir, _SpecPower) * gloss) * _SpecMultiplier)* 2.0)) + 
+										((ramp_color + fixed3(0.5, 0.5, 0.5)) * resultColor_3));
+
+			  finalColor.xyz = clamp (((resultColor_4 * 
+						lerp (_HeightColor.xyz, fixed3(1.0, 1.0, 1.0), 
+						clamp ((fixed((i.uv4.y - (mul(_Object2World, fixed4(0.0, 0.0, 0.0, 1.0)).y - _Offset))) + fixed((normalize(i.uv5).y * 0.5))), 0.0, 1.0)
+						)) * _HeightLightCompensation), 0.0, 1.0);
+			  finalColor.w = main_color.w;
 
 			  //return fixed4(clamp ((fixed((i.uv4.y - _Offset)) + fixed((normalize(i.uv5).y * 0.5))), 0.0, 1.0), 0, 0, 1);
-			  //finalColor.xyz = lerp (_HeightColor.xyz, fixed3(1.0, 1.0, 1.0), clamp ((fixed((i.uv4.y - (mul(_Object2World, fixed4(0.0, 0.0, 0.0, 1.0)).y - _Offset))) + fixed((normalize(i.uv5).y * 0.5))), 0.0, 1.0));
-
 			  return finalColor;
 		}
 	

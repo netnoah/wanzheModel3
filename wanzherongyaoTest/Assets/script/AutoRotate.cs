@@ -17,7 +17,7 @@ public class AutoRotate : MonoBehaviour
             if (smr != null)
             {
                 BoxCollider c = smr.gameObject.AddComponent<BoxCollider>();
-                c.size = 2 * c.size;
+                c.size = new Vector3(2* c.size.x, c.size.y, c.size.z);
                 //Material mat = smr.material;
                 //mat.SetVector("_SGameShadowParams", new Vector4(0, 0, 0, 0));
                 //Debug.LogFormat("set params {0}", 1);
