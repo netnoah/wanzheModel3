@@ -71,16 +71,11 @@
 			//_SGameShadowParams = float4(-0.486, -0.271, 0.831, 0.5);
 			//_SGameShadowParams = float4(-0.376, -0.2997, 0.8767, 0.5);
 			
-			float4 n_tangent;
-			n_tangent.xyz = normalize(v.tangent.xyz);
-			n_tangent.w = v.tangent.w;
-			
-			float3 n_normal = normalize(v.normal);
-			
 			half4 result_uv;
 			result_uv.xy = TRANSFORM_TEX(v.texcoord,_MainTex);
 			result_uv.zw = TRANSFORM_TEX(v.texcoord,_NoiseTex) + frac(half2(_Scroll2X, _Scroll2Y) * _Time.x);
- 
+			
+			float3 n_normal = normalize(v.normal);
 			half3 v_normal = mul(UNITY_MATRIX_MV, float4(n_normal, 0)).xyz;
 			float4 world_pos = mul(_Object2World, v.vertex);
 			  
@@ -113,32 +108,55 @@
 			  half3 normalize_n = normalize(i.uv1);
 			  half2 fixed_n = ((normalize_n.xy * 0.5) + 0.5);
 			  fixed4 main_color = tex2D (_MainTex, i.uv0.xy);
+			  // mask x通道：决定相应区域高光的强弱
+			  // mask y通道：决定相应区域流光的强弱
+			  // mask z通道：决定相应区域反射光的强弱
 			  fixed4 mask_color = tex2D (_MaskTex, i.uv0.xy);
-			  half3 resultColor_1 = ((main_color.xyz + 0.15) * (tex2D (_LightTex, fixed_n) * 1.2).xyz);
-			  half3 noise_color = tex2D (_NoiseTex, i.uv0.zw).xyz;
-			  half3 noise_color2 = ((noise_color * (main_color.xyz * _NoiseColor)) * (mask_color.y * _MMultiplier));
-			  half3 resultColor_2 = ((resultColor_1 + main_color.xyz) + noise_color2);
-			  fixed4 reflect_color = tex2D (_ReflectTex, fixed_n);
-			  half3 resultColor_3 = lerp (resultColor_2, 
-										((resultColor_2 * pow ((reflect_color.xyz * _ReflectColor), _ReflectPower)) * _ReflectionMultiplier),
-										mask_color.zzz);
+			  
 			  fixed2 ramp_uv;
 			  ramp_uv.x = ((i.uv3.z * 0.5) + 0.5);
 			  ramp_uv.y = 0.5;
 			  half3 ramp_color = tex2D (_RampMap, ramp_uv).xyz;
+			  
+			  // matcap light(material capture light)
+			  half3 matcap_color = ((main_color.xyz + 0.15) * (tex2D (_LightTex, fixed_n) * 1.2).xyz);
+			  
+			  // flow light
+			  half3 noise_color = tex2D (_NoiseTex, i.uv0.zw).xyz;
+			  half3 noise_color2 = ((noise_color * (main_color.xyz * _NoiseColor)) * (mask_color.y * _MMultiplier));
+			  
+			  // reflect light
+			  fixed4 reflect_color = tex2D (_ReflectTex, fixed_n);
+			  
+			  // specular light
 			  float halfway_dir = max (0.0, normalize((i.uv3 + i.uv2)).z);  
 			  half gloss = mask_color.x;
-			  float3 resultColor_4 = ((_SpecColor * (((pow (halfway_dir, _SpecPower) * gloss) * _SpecMultiplier)* 2.0)) + 
-										((ramp_color + fixed3(0.5, 0.5, 0.5)) * resultColor_3));
-
+			  fixed3 specular_color = (_SpecColor * (((pow (halfway_dir, _SpecPower) * gloss) * _SpecMultiplier)* 2.0));
+			  
+			  // main color + matcap ligth + flow light
+			  half3 resultColor_1 = ((matcap_color + main_color.xyz) + noise_color2);
+			  
+			  // main color + matcap ligth + flow light + reflect light
+			  half3 resultColor_2 = lerp (resultColor_1, 
+										((resultColor_1 * pow ((reflect_color.xyz * _ReflectColor), _ReflectPower)) * _ReflectionMultiplier),
+										mask_color.zzz);
+			  
+			  // main color + matcap ligth + flow light + reflect light + specular light
+			  // ramp color用来进一步控制上面结果的颜色渐变
+			  float3 resultColor_3 = (specular_color + ((ramp_color + fixed3(0.5, 0.5, 0.5)) * resultColor_2));
+			  
+			  // 在上面结果基础上，增加一个和顶点所处高度相关的颜色变化
 			  fixed4 finalColor;
-			  finalColor.xyz = clamp (((resultColor_4 * 
+			  finalColor.w = main_color.w;
+			  finalColor.xyz = clamp (((resultColor_3 * 
 						lerp (_HeightColor.xyz, fixed3(1.0, 1.0, 1.0), 
 						clamp ((fixed((i.uv4.y - (mul(_Object2World, fixed4(0.0, 0.0, 0.0, 1.0)).y - _Offset))) + fixed((normalize(i.uv5).y * 0.5))), 0.0, 1.0)
 						)) * _HeightLightCompensation), 0.0, 1.0);
-			  finalColor.w = main_color.w;
-
+			  
 			  //return fixed4(clamp ((fixed((i.uv4.y - _Offset)) + fixed((normalize(i.uv5).y * 0.5))), 0.0, 1.0), 0, 0, 1);
+			  //return fixed4(mask_color.x, 0, 0, 1);
+			  //return fixed4(mask_color.y, 0, 0, 1);
+			  //return fixed4(mask_color.z, 0, 0, 1);
 			  return finalColor;
 		}
 	
