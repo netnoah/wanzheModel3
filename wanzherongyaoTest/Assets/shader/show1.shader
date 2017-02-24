@@ -110,13 +110,8 @@
 		
 		fixed4 frag( v2f i ) : COLOR
 		{
-		      fixed4 finalColor;
-			  half gloss;
-			  half2 fixed_n;
-			  half3 normalize_n;
-			  normalize_n = normalize(i.uv1);
-			  fixed_n = ((normalize_n.xy * 0.5) + 0.5);
-
+			  half3 normalize_n = normalize(i.uv1);
+			  half2 fixed_n = ((normalize_n.xy * 0.5) + 0.5);
 			  fixed4 main_color = tex2D (_MainTex, i.uv0.xy);
 			  fixed4 mask_color = tex2D (_MaskTex, i.uv0.xy);
 			  half3 resultColor_1 = ((main_color.xyz + 0.15) * (tex2D (_LightTex, fixed_n) * 1.2).xyz);
@@ -132,10 +127,11 @@
 			  ramp_uv.y = 0.5;
 			  half3 ramp_color = tex2D (_RampMap, ramp_uv).xyz;
 			  float halfway_dir = max (0.0, normalize((i.uv3 + i.uv2)).z);  
-			  gloss = mask_color.x;
+			  half gloss = mask_color.x;
 			  float3 resultColor_4 = ((_SpecColor * (((pow (halfway_dir, _SpecPower) * gloss) * _SpecMultiplier)* 2.0)) + 
 										((ramp_color + fixed3(0.5, 0.5, 0.5)) * resultColor_3));
 
+			  fixed4 finalColor;
 			  finalColor.xyz = clamp (((resultColor_4 * 
 						lerp (_HeightColor.xyz, fixed3(1.0, 1.0, 1.0), 
 						clamp ((fixed((i.uv4.y - (mul(_Object2World, fixed4(0.0, 0.0, 0.0, 1.0)).y - _Offset))) + fixed((normalize(i.uv5).y * 0.5))), 0.0, 1.0)
