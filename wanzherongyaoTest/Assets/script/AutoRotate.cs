@@ -16,7 +16,8 @@ public class AutoRotate : MonoBehaviour
             MeshRenderer smr = this.transform.gameObject.GetComponentInChildren<MeshRenderer>();
             if (smr != null)
             {
-                smr.gameObject.AddComponent<BoxCollider>();
+                BoxCollider c = smr.gameObject.AddComponent<BoxCollider>();
+                c.size = 2 * c.size;
                 //Material mat = smr.material;
                 //mat.SetVector("_SGameShadowParams", new Vector4(0, 0, 0, 0));
                 //Debug.LogFormat("set params {0}", 1);
