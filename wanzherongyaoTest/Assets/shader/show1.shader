@@ -27,6 +27,10 @@
 	CGINCLUDE
 
 		#include "UnityCG.cginc"
+		
+		
+		
+		
 		sampler2D _MainTex;	
 		sampler2D _MaskTex;
 		sampler2D _RampMap;
@@ -108,7 +112,7 @@
 			  half3 normalize_n = normalize(i.uv1);
 			  half2 fixed_n = ((normalize_n.xy * 0.5) + 0.5);
 			  fixed4 main_color = tex2D (_MainTex, i.uv0.xy);
-			  // mask x通道：决定相应区域高光的强弱
+			  // mask x通道：决定相应区域镜面高光的强弱
 			  // mask y通道：决定相应区域流光的强弱
 			  // mask z通道：决定相应区域反射光的强弱
 			  fixed4 mask_color = tex2D (_MaskTex, i.uv0.xy);
@@ -119,19 +123,32 @@
 			  half3 ramp_color = tex2D (_RampMap, ramp_uv).xyz;
 			  
 			  // matcap light(material capture light)
-			  half3 matcap_color = ((main_color.xyz + 0.15) * (tex2D (_LightTex, fixed_n) * 1.2).xyz);
+			  #if OPEN_MATCAP_LIGHT
+				half3 matcap_color = ((main_color.xyz + 0.15) * (tex2D (_LightTex, fixed_n) * 1.2).xyz);
+			  #else
+				half3 matcap_color = half3(0, 0, 0);
+			  #endif
 			  
 			  // flow light
 			  half3 noise_color = tex2D (_NoiseTex, i.uv0.zw).xyz;
 			  half3 noise_color2 = ((noise_color * (main_color.xyz * _NoiseColor)) * (mask_color.y * _MMultiplier));
 			  
 			  // reflect light
-			  fixed4 reflect_color = tex2D (_ReflectTex, fixed_n);
+			  #if OPEN_REFLECT_LIGHT
+				fixed4 reflect_color = tex2D (_ReflectTex, fixed_n);
+			  #else
+				fixed4 reflect_color = fixed4(0, 0, 0, 0);
+				mask_color.z = 0;
+			  #endif
 			  
 			  // specular light
-			  float halfway_dir = max (0.0, normalize((i.uv3 + i.uv2)).z);  
-			  half gloss = mask_color.x;
-			  fixed3 specular_color = (_SpecColor * (((pow (halfway_dir, _SpecPower) * gloss) * _SpecMultiplier)* 2.0));
+			  #if OPEN_SPECULAR_LIGHT
+				float halfway_dir = max (0.0, normalize((i.uv3 + i.uv2)).z);  
+				half gloss = mask_color.x;
+				fixed3 specular_color = (_SpecColor * (((pow (halfway_dir, _SpecPower) * gloss) * _SpecMultiplier)* 2.0));
+			  #else
+				fixed3 specular_color = fixed3(0, 0, 0);
+			  #endif
 			  
 			  // main color + matcap ligth + flow light
 			  half3 resultColor_1 = ((matcap_color + main_color.xyz) + noise_color2);
@@ -157,6 +174,24 @@
 			  //return fixed4(mask_color.x, 0, 0, 1);
 			  //return fixed4(mask_color.y, 0, 0, 1);
 			  //return fixed4(mask_color.z, 0, 0, 1);
+
+
+			  #if SHOW_MASK_X
+				finalColor = fixed4(mask_color.x, 0, 0, 1);
+			  #endif
+
+			  #if SHOW_MASK_Y
+				finalColor = fixed4(mask_color.y, 0, 0, 1);
+			  #endif
+
+			  #if SHOW_MASK_Z
+				finalColor = fixed4(mask_color.z, 0, 0, 1);
+			  #endif
+
+			  #if SHOW_RAW_COLOR
+				finalColor = main_color;
+			  #endif
+
 			  return finalColor;
 		}
 	
@@ -171,7 +206,14 @@
 			CGPROGRAM		
 				#pragma vertex vert
 				#pragma fragment frag
-				#pragma fragmentoption ARB_precision_hint_fastest 		
+				#pragma fragmentoption ARB_precision_hint_fastest 	
+				#pragma multi_compile __ SHOW_MASK_X	
+				#pragma multi_compile __ SHOW_MASK_Y
+				#pragma multi_compile __ SHOW_MASK_Z
+				#pragma multi_compile __ SHOW_RAW_COLOR
+				#pragma multi_compile __ OPEN_SPECULAR_LIGHT
+				#pragma multi_compile __ OPEN_MATCAP_LIGHT
+				#pragma multi_compile __ OPEN_REFLECT_LIGHT
 			ENDCG	 
 		}				
 	} 
