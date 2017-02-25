@@ -51,6 +51,7 @@
      <None Include="Assets\shader\showWithNormal - 副本.shader" />
      <None Include="Assets\shader\show1 - 副本.shader" />
      <None Include="Assets\shader\showWithNormal.shader" />
+     <None Include="Assets\shader\show_for_test.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>H:/Program Files (x86)/Unity5_3_6/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

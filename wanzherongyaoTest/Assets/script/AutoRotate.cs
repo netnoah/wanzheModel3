@@ -13,11 +13,11 @@ public class AutoRotate : MonoBehaviour
             Shader.SetGlobalVector("_SGameShadowParams", new Vector4(-0.486f, -0.271f, 0.831f, 0.5f));
             //Shader.SetGlobalVector("_SGameShadowParams", new Vector4(-0.376f, -0.2997f, 0.8767f, 0.5f));
 
-            MeshRenderer smr = this.transform.gameObject.GetComponentInChildren<MeshRenderer>();
+            Renderer smr = this.transform.gameObject.GetComponentInChildren<Renderer>();
             if (smr != null)
             {
                 BoxCollider c = smr.gameObject.AddComponent<BoxCollider>();
-                c.size = new Vector3(2* c.size.x, c.size.y, c.size.z);
+                c.size = new Vector3(2* c.size.x, 2*c.size.y, 2*c.size.z);
                 //Material mat = smr.material;
                 //mat.SetVector("_SGameShadowParams", new Vector4(0, 0, 0, 0));
                 //Debug.LogFormat("set params {0}", 1);
