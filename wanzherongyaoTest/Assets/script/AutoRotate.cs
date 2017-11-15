@@ -13,7 +13,7 @@ public class AutoRotate : MonoBehaviour
             Shader.SetGlobalVector("_SGameShadowParams", new Vector4(-0.486f, -0.271f, 0.831f, 0.5f));
             //Shader.SetGlobalVector("_SGameShadowParams", new Vector4(-0.376f, -0.2997f, 0.8767f, 0.5f));
 
-            Renderer smr = this.transform.gameObject.GetComponentInChildren<Renderer>();
+            Renderer smr = this.transform.gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
             if (smr != null)
             {
                 BoxCollider c = smr.gameObject.AddComponent<BoxCollider>();

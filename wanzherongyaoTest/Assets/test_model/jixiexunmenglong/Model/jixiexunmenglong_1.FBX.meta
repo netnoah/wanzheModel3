@@ -1,0 +1,138 @@
+fileFormatVersion: 2
+guid: 2489059cbe69cae4aa3d919e1587d594
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Bip_Chest
+    100002: Bip_Head
+    100004: Bip_L_Calf
+    100006: Bip_L_Clavicle
+    100008: Bip_L_Finger0
+    100010: Bip_L_Foot
+    100012: Bip_L_Foot_B1
+    100014: Bip_L_Forearm
+    100016: Bip_L_Hand
+    100018: Bip_L_HorseLink
+    100020: Bip_L_Thigh
+    100022: Bip_L_Toe0
+    100024: Bip_L_UpperArm
+    100026: Bip_Man
+    100028: Bip_Neck
+    100030: Bip_Neck2
+    100032: Bip_Pelvis
+    100034: Bip_Pelvis_B_1
+    100036: Bip_Pelvis_B_2
+    100038: Bip_Pelvis_B_3
+    100040: Bip_Pelvis_B_4
+    100042: Bip_Pelvis_L_1
+    100044: Bip_Pelvis_R_1
+    100046: Bip_R_Calf
+    100048: Bip_R_Clavicle
+    100050: Bip_R_Finger0
+    100052: Bip_R_Foot
+    100054: Bip_R_Foot_B1
+    100056: Bip_R_Forearm
+    100058: Bip_R_Hand
+    100060: Bip_R_HorseLink
+    100062: Bip_R_Thigh
+    100064: Bip_R_Toe0
+    100066: Bip_R_UpperArm
+    100068: Bip_Spine
+    100070: jixiexunmenglong_1
+    100072: //RootNode
+    100074: Ride
+    400000: Bip_Chest
+    400002: Bip_Head
+    400004: Bip_L_Calf
+    400006: Bip_L_Clavicle
+    400008: Bip_L_Finger0
+    400010: Bip_L_Foot
+    400012: Bip_L_Foot_B1
+    400014: Bip_L_Forearm
+    400016: Bip_L_Hand
+    400018: Bip_L_HorseLink
+    400020: Bip_L_Thigh
+    400022: Bip_L_Toe0
+    400024: Bip_L_UpperArm
+    400026: Bip_Man
+    400028: Bip_Neck
+    400030: Bip_Neck2
+    400032: Bip_Pelvis
+    400034: Bip_Pelvis_B_1
+    400036: Bip_Pelvis_B_2
+    400038: Bip_Pelvis_B_3
+    400040: Bip_Pelvis_B_4
+    400042: Bip_Pelvis_L_1
+    400044: Bip_Pelvis_R_1
+    400046: Bip_R_Calf
+    400048: Bip_R_Clavicle
+    400050: Bip_R_Finger0
+    400052: Bip_R_Foot
+    400054: Bip_R_Foot_B1
+    400056: Bip_R_Forearm
+    400058: Bip_R_Hand
+    400060: Bip_R_HorseLink
+    400062: Bip_R_Thigh
+    400064: Bip_R_Toe0
+    400066: Bip_R_UpperArm
+    400068: Bip_Spine
+    400070: //RootNode
+    400072: jixiexunmenglong_1
+    400074: Ride
+    4300000: jixiexunmenglong_1
+    11100000: //RootNode
+    13700000: jixiexunmenglong_1
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 1
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: 1
+    animationPositionError: 1
+    animationScaleError: 1
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 1
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 180
+    splitTangentsAcrossUV: 1
+    normalImportMode: 1
+    tangentImportMode: 2
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  additionalBone: 0
+  userData: 
